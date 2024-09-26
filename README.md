@@ -12,6 +12,6 @@ SentimentAI is a web application designed to analyze the emotional undertones of
 ## Technologies Used
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Python, Flask
-- **NLP Library**: Uses Hugging Face's transformers for sentiment analysis.
+- **NLP Library**: Uses nltk for sentiment analysis.
 - **Data Visualization**: Chart.js for rendering sentiment analysis results graphically.
 
