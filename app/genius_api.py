@@ -1,6 +1,7 @@
 import os
 import requests
 from bs4 import BeautifulSoup
+import re
 
 GENIUS_API_TOKEN = os.getenv('GENIUS_ACCESS_TOKEN')
 BASE_URL = 'https://api.genius.com'
@@ -21,13 +22,19 @@ def get_lyrics(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     
-    lyrics_div = soup.find('div', class_='lyrics')
-    if not lyrics_div:
-        lyrics_div = soup.find('div', class_='Lyrics__Container-sc-1ynbvzw-6')
-    if not lyrics_div:
-        lyrics_div = soup.find('div', attrs={"data-lyrics-container": "true"})
-    
-    if lyrics_div:
-        return lyrics_div.get_text(separator="\n")
-    
-    return None
+    # Find all divs that are containers for lyrics
+    lyrics_containers = soup.find_all('div', attrs={"data-lyrics-container": "true"})
+    if not lyrics_containers:
+        return None
+
+    lyrics = ''
+    for container in lyrics_containers:
+        # Extract text, handling any <br> tags as newlines
+        for element in container.descendants:
+            if isinstance(element, str):
+                lyrics += element
+            elif element.name == 'br':
+                lyrics += '\n'
+        lyrics += '\n'  # Add extra newline between containers if needed
+
+    return lyrics.strip()
