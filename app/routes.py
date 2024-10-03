@@ -4,9 +4,11 @@ from app.sentiment_analysis import analyze_sentiment
 
 main = Blueprint('main', __name__)
 
+#render homepage 
 @main.route('/')
 def index():
     return render_template('index.html')
+
 
 @main.route('/analyze', methods=['POST'])
 def analyze():

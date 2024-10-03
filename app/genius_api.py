@@ -3,22 +3,29 @@ import requests
 from bs4 import BeautifulSoup
 import re
 
+#get api token from environment variable
 GENIUS_API_TOKEN = os.getenv('GENIUS_ACCESS_TOKEN')
 BASE_URL = 'https://api.genius.com'
 
 def search_song(title, artist):
+
+    #set API endpoint URL and searc parameters 
     search_url = f"{BASE_URL}/search"
     headers = {'Authorization': f'Bearer {GENIUS_API_TOKEN}'}
     params = {'q': f'{title} {artist}'}
     
+    #request to genius api to search for the song
     response = requests.get(search_url, headers=headers, params=params)
     data = response.json()
-    
+
+    #parse the response and return first results if match is found
     if 'response' in data and data['response']['hits']:
         return data['response']['hits'][0]['result']
     return None
 
+
 def get_lyrics(url):
+    #request song page and then use soup to parse html
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     
